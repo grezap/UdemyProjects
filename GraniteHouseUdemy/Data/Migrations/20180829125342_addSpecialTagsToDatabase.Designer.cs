@@ -4,49 +4,22 @@ using GraniteHouseUdemy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GraniteHouseUdemy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180829125342_addSpecialTagsToDatabase")]
+    partial class addSpecialTagsToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GraniteHouseUdemy.Models.Products", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Available");
-
-                    b.Property<string>("Image");
-
-                    b.Property<string>("Name");
-
-                    b.Property<double>("Price");
-
-                    b.Property<int>("ProductTypeId");
-
-                    b.Property<string>("ShadeColor");
-
-                    b.Property<int>("SpecialTagsId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductTypeId");
-
-                    b.HasIndex("SpecialTagsId");
-
-                    b.ToTable("Products");
-                });
 
             modelBuilder.Entity("GraniteHouseUdemy.Models.ProductTypes", b =>
                 {
@@ -239,19 +212,6 @@ namespace GraniteHouseUdemy.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("GraniteHouseUdemy.Models.Products", b =>
-                {
-                    b.HasOne("GraniteHouseUdemy.Models.ProductTypes", "ProductTypes")
-                        .WithMany()
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GraniteHouseUdemy.Models.SpecialTags", "SpecialTags")
-                        .WithMany()
-                        .HasForeignKey("SpecialTagsId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

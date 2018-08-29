@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace GraniteHouseUdemy.Models
 {
-    public class ProductTypes
+    public class SpecialTags
     {
+        [Required]
         public int Id { get; set; }
 
         [Required]

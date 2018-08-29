@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace GraniteHouseUdemy.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductTypesController : Controller
+    public class SpecialTagsController : Controller
     {
-
         private readonly ApplicationDbContext _db;
 
-        public ProductTypesController(ApplicationDbContext db)
+        public SpecialTagsController(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -22,7 +21,7 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
         public IActionResult Index()
         {
 
-            return View(_db.ProductTypes.ToList());
+            return View(_db.SpecialTags.ToList());
         }
 
         public IActionResult Create()
@@ -31,18 +30,18 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] 
+        [ValidateAntiForgeryToken]
         //with every post request, an antiforgery token is added and passed along with the request, 
         //once it reaches the server it checks to see if the token is valid or not, if it is valid then it knows that the request has not been altered in any way (e.g. hacking)
-        public async Task<IActionResult> Create(ProductTypes productTypes)
+        public async Task<IActionResult> Create(SpecialTags specialTags)
         {
             if (ModelState.IsValid)
             {
-                _db.Add(productTypes);
+                _db.Add(specialTags);
                 await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productTypes);
+            return View(specialTags);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -51,32 +50,32 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            return View(specialTag);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         //with every post request, an antiforgery token is added and passed along with the request, 
         //once it reaches the server it checks to see if the token is valid or not, if it is valid then it knows that the request has not been altered in any way (e.g. hacking)
-        public async Task<IActionResult> Edit(int id, ProductTypes productTypes)
+        public async Task<IActionResult> Edit(int id, SpecialTags specialTags)
         {
-            if (id!= productTypes.Id)
+            if (id != specialTags.Id)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                _db.Update(productTypes); //Entity framework here handles all the mapping, normally we should fetch the database ebtry and update it
+                _db.Update(specialTags); //Entity framework here handles all the mapping, normally we should fetch the database ebtry and update it
                 await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productTypes);
+            return View(specialTags);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -85,13 +84,13 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            return View(specialTag);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -100,13 +99,13 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = await _db.ProductTypes.FindAsync(id);
-            if (productType == null)
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            return View(specialTag);
         }
 
         [HttpPost]
@@ -115,8 +114,8 @@ namespace GraniteHouseUdemy.Areas.Admin.Controllers
         //once it reaches the server it checks to see if the token is valid or not, if it is valid then it knows that the request has not been altered in any way (e.g. hacking)
         public async Task<IActionResult> Delete(int id)
         {
-            var productType = await _db.ProductTypes.FindAsync(id);
-            _db.ProductTypes.Remove(productType);
+            var specialTag = await _db.SpecialTags.FindAsync(id);
+            _db.SpecialTags.Remove(specialTag);
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
