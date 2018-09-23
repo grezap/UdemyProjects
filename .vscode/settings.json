@@ -1,0 +1,14 @@
+{
+    "php.suggest.basic": false,
+    "php.validate.enable": true,
+    "php.validate.run": "onType",
+    "php.validate.executablePath": "/usr/bin/php",
+    "namespaceResolver.sortOnSave": false,
+    "namespaceResolver.exclude": "**/node_modules/**",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true
+    }
+    
+}
