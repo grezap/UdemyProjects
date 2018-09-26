@@ -85,6 +85,8 @@ Route::get('tag/posts', function () {
     }
 });
 
+Route::resource('/posts', 'PostsController');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

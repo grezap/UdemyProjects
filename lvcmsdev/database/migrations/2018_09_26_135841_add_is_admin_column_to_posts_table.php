@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class DropColumnUserIdFromPost extends Migration
+class AddIsAdminColumnToPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +13,10 @@ class DropColumnUserIdFromPost extends Migration
      */
     public function up()
     {
+        //
         Schema::table('post', function (Blueprint $table) {
             //
-            $table->dropColumn('user_id');
+            $table->tinyInteger('is_admin')->default('0');
         });
     }
 
@@ -25,9 +27,10 @@ class DropColumnUserIdFromPost extends Migration
      */
     public function down()
     {
+        //
         Schema::table('post', function (Blueprint $table) {
             //
-            $table->integer('user_id')->unsigned();
+            $table->dropColumn('is_admin');
         });
     }
 }

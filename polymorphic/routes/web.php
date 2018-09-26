@@ -73,3 +73,5 @@ Route::get('/deletestaffphoto/{id}/{photoid}', function ($id,$photoid) {
         return "could not delete";
     }
 });
+
+Route::resource('/posts', 'PostsController');
