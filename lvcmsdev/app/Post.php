@@ -9,10 +9,12 @@ class Post extends Model
 {
     //
     
+    private $directory = "/images/";
+
     Use SoftDeletes;
     
     protected $table = 'post'; // define that the database table is different than the default one
-    protected $fillable = ['title','content'];
+    protected $fillable = ['title','content','path'];
     protected $dates = ['deleted_at'];
     public function user()
     {
@@ -26,5 +28,16 @@ class Post extends Model
     public function tags()
     {
        return $this->morphToMany('App\Tag','taggable','taggable');
+    }
+
+    //QueryScope: must start with word scope and after that follows the word we want to call it by
+    public static function scopeLatest($query)
+    {
+        return $query->withTrashed()->orderBy('id','desc')->get();
+    }
+
+    public function getPathAttribute($value)
+    {
+        return $this->directory.$value;
     }
 }
