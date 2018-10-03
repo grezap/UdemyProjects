@@ -49,22 +49,34 @@
 
     <?php 
         // $user = new User();
-        $result = User::getAllUsers();
-        // while ($row = mysqli_fetch_array($result)) {
-        //     echo $row['username']."<br>";
-        // }
+        // $user->firstname = 'user8';
+        // $user->lastname = 'user8';
+        // $user->username = 'user8';
+        // $user->password = '1234';
+        // $result = $user->saveUser();
+        
+        // $user = User::getUserById(6);
+        // $user->deleteUser();
 
-        // $us = User::getUserById(1);
-        // echo $us['username']."<br>";
+        // $user1 = User::getUserById(8);
+        // $user1->firstname = 'user7Updated';
+        // $user1->lastname = 'user7Updated';
+        // $user1->username = 'user7';
+        // $user1->password = '1234';
+        // $user1->saveUser();
 
-        // $user = User::instantiate($us);
-        // echo $user->userId;
-        foreach ($result as $user) {
-            echo $user->username."<br>";
-        }
-        echo "<br>";
-        $user = User::getUserById(1);
-        echo $user->username;
+        $photo = new Photo();
+        $photo->photo_title='photo2';
+        $photo->photo_description='photo2 Description';
+        $photo->photo_filename='photoTwo';
+        $photo->photo_type='jpg';
+        $photo->photo_size = 100;
+        $photo->save();
+
+        // $photo = Photo::getById(2);
+        // $photo->delete();
+
+
     ?>
 
     </div>

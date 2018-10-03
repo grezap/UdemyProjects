@@ -4,7 +4,7 @@
 
     class Database{
 
-        private $connection;
+        public $connection;
 
         function __construct()
         {
@@ -40,6 +40,22 @@
 
         public function getInsertId() {
             return $this->connection->insert_id;
+        }
+
+        public function getInsertIdMySql()
+        {
+            return mysqli_insert_id($this->connection);
+        } 
+
+        public function getConnection()
+        {
+            return $this->connection;
+        }
+
+        public function getUpdatedRows()
+        {
+            $res = $this->connection;
+            return mysqli_affected_rows($this->connection);
         }
 
     }
