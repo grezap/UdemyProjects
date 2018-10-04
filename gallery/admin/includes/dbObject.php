@@ -22,7 +22,7 @@
 
         }
 
-        private static function findByQuery($qry){
+        public static function findByQuery($qry){
             global $database;
             $result =  $database->query($qry);
             $object_array = array();

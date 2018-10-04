@@ -15,7 +15,7 @@
             global $database;
             $username = $database->escapeString($username);
             $password = $database->escapeString($password);
-            $result = self::findByQuery("select * from users where username = '{$username}' and password = '{$password}';");
+            $result = self::findByQuery("select * from ".self::$dbTable." where username = '{$username}' and password = '{$password}';");
             return !empty($result) ? array_shift($result) : false;
         }
 

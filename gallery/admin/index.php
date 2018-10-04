@@ -4,7 +4,7 @@
 
 <?php 
     if (!$session->getSignedIn()) {
-         var_dump($session); 
+        //  var_dump($session); 
          redirectTo("login.php"); 
         }
 
@@ -65,13 +65,15 @@
         // $user1->password = '1234';
         // $user1->saveUser();
 
-        $photo = new Photo();
-        $photo->photo_title='photo2';
-        $photo->photo_description='photo2 Description';
-        $photo->photo_filename='photoTwo';
-        $photo->photo_type='jpg';
-        $photo->photo_size = 100;
-        $photo->save();
+        // $photo = new Photo();
+        // $photo->photo_title='photo2';
+        // $photo->photo_description='photo2 Description';
+        // $photo->photo_filename='photoTwo';
+        // $photo->photo_type='jpg';
+        // $photo->photo_size = 100;
+        // $photo->save();
+
+       // echo INCLUDES_PATH;
 
         // $photo = Photo::getById(2);
         // $photo->delete();
