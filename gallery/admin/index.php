@@ -5,7 +5,8 @@
 <?php 
     if (!$session->getSignedIn()) {
          var_dump($session); 
-         redirectTo("login.php"); 
+         redirectTo("admin/login.php"); 
+        //  redirectTo("login.php"); 
         }
 
 ?>

@@ -1,32 +1,35 @@
 {
     "php.suggest.basic": false,
+    "php.validate.enable": true,
+    "php.validate.executablePath": "C:\\Program Files\\php\\php.exe",
+    "php.validate.run": "onType"
     // "files.associations": {
     //     "*.php":"php"
     // },
-    "deploy": {
-        "button": {
-            "enabled": true,
-            "text": "Deploy Local gallery",
-            "packages":[
-                "gallery"
-            ]
-        },
-        "packages": [
-            {
-                "name":"gallery",
-                "deployOnSave": true,
-                "targets":[
-                    "apache dev"
-                ]
-            }
-        ],
-        "targets": [
-            {
-                "type": "local",
-                "name": "apache dev",
-                "description": "local apache deelopment directory",
-                "dir": "C:/Program Files/Apache24/htdocs/gallery"
-            }
-        ]
-    }
+    // "deploy": {
+    //     "button": {
+    //         "enabled": true,
+    //         "text": "Deploy Local gallery",
+    //         "packages":[
+    //             "gallery"
+    //         ]
+    //     },
+    //     "packages": [
+    //         {
+    //             "name":"gallery",
+    //             "deployOnSave": true,
+    //             "targets":[
+    //                 "apache dev"
+    //             ]
+    //         }
+    //     ],
+    //     "targets": [
+    //         {
+    //             "type": "local",
+    //             "name": "apache dev",
+    //             "description": "local apache deelopment directory",
+    //             "dir": "C:/Program Files/Apache24/htdocs/gallery"
+    //         }
+    //     ]
+    // }
 }
