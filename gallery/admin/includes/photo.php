@@ -4,7 +4,7 @@
         #region properties
 
         protected static $dbTable = 'photo';
-        protected static $dbTableFields = array('photo_title','photo_description','photo_filename','photo_type','photo_size');    
+        protected static $dbTableFields = array('photo_title','photo_description','photo_filename','photo_type','photo_size','photo_caption','photo_alternatetext');    
         private $isCreated = false;    
         public $photo_id;
         public $photo_title;
@@ -12,7 +12,8 @@
         public $photo_filename;
         public $photo_type;
         public $photo_size;
-        
+        public $photo_alternatetext;
+        public $photo_caption;
 
         public $tmp_path;
         public $imgDir= "images";
@@ -97,6 +98,29 @@
 
         public function picturePath(){
             return $this->imgDir.DS.$this->photo_filename;
+        }
+
+        public function deletePhoto() : bool{
+            if (!isset($this->photo_id)) {
+                $this->customErrors[] = "Photo Id is empty.";
+                return false;
+            }
+
+            $targetPath = SITE_ROOT.DS."admin".DS.$this->picturePath();
+
+            if (file_exists($targetPath)) {
+                unlink($targetPath);
+            }else {
+                $this->customErrors[] = "Could not delete file {$this->picturePath()}";
+                return false;
+            }
+
+            if (!$this->delete()) {
+                $this->customErrors[] = "Could not delete photo from database";
+                return false;
+            }
+            
+            return true;
         }
 
         #endregion

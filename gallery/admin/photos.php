@@ -7,6 +7,7 @@
 
 ?>
 <?php
+    
     $photos = Photo::getAll();
 ?>
         <!-- Navigation -->
@@ -31,6 +32,13 @@
                 </h1>
 
                 <div class="col-md-12">
+                <?php  if (!empty($session->message)) { ?>
+
+                        <div class="alert alert-info">
+                            <?php echo $session->message; ?>
+                        </div>
+                        
+                <?php }?>
                 <!-- Photo Table  -->
                     <table class="table table-hover">
                         <thead>
@@ -50,7 +58,7 @@
                                         <img src="<?php echo $photo->picturePath(); ?>" alt="">
                                         <div class="pctlnk">
                                             <a href="DeletePhoto.php/?id=<?php echo $photo->photo_id; ?>">Delete</a>
-                                            <a href="#">Edit</a>
+                                            <a href="editPhoto.php?id=<?php echo $photo->photo_id; ?>">Edit</a>
                                             <a href="#">View</a>
                                         </div>
                                     </td>
