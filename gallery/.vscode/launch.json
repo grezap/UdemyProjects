@@ -9,8 +9,11 @@
             "type": "php",
             "request": "launch",
             "port": 9000,
+            // "pathMappings": {
+            //     "C:\\Program Files\\Apache24\\htdocs\\gallery":"${workspaceRoot}"
+            // }
             "pathMappings": {
-                "C:\\Program Files\\Apache24\\htdocs\\gallery":"${workspaceRoot}"
+                "C:\\_Dev_\\_Github_Repos_\\UdemyProjects\\gallery":"${workspaceRoot}"
             }
         },
         {
