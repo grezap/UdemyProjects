@@ -55,7 +55,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Photo</th>
-                                <th>Username</th>
+                                <th>Author</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                             </tr>

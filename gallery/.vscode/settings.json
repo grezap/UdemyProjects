@@ -14,7 +14,7 @@
         "packages": [
             {
                 "name":"gallery",
-                "deployOnSave": true,
+                "deployOnSave": false,
                 "targets":[
                     "apache dev"
                 ]
