@@ -1,8 +1,12 @@
 <?php
 
-define("DSN", "mysql:host=192.168.203.6;dbname=tasklist");
-define("USERNAME", "usr");
+// define("DSN", "mysql:host=192.168.203.6;dbname=tasklist");
+define("DSN", "mysql:host=localhost;dbname=tasklist");
+// define("USERNAME", "usr");
+define("USERNAME", "root");
+// define("PASSWORD", "tzimakos");
 define("PASSWORD", "tzimakos");
+
 
 $options = array(PDO::ATTR_PERSISTENT => true);
 

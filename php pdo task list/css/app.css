@@ -12,3 +12,12 @@
     border-radius: 2px;
     display: none;
 }
+
+.editable{
+    cursor: pointer;
+}
+
+.editable:hover{
+    background-color: lightyellow;
+    background-size: 100%;
+}

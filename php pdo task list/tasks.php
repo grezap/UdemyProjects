@@ -2,6 +2,7 @@
 $pageTitle = "Manage Tasks" ;
 
 include_once 'partials/header.php';
+include_once 'read.php';
 ?>
 
 <div class="container-fluid">
@@ -13,10 +14,20 @@ include_once 'partials/header.php';
             <tr><th>Name</th><th>Description</th><th>Status</th><th>Created</th><th>Action</th></tr>
             </thead>
             
-            <tbody id="task-list">
-
+            <tbody>
+                <?php foreach ($tasks as $task): ?>
+                    <tr>
+                        <td title='Click to Edit'> <div class='editable' onclick="makeElementEditable(this)" onblur="updateTask(this,'<?=$task['id']?>','name')"><?=$task['name']?></div></td>
+                        <td title='Click to Edit'> <div class='editable' onclick="makeElementEditable(this)" onblur="updateTask(this,'<?=$task['id']?>','description')"><?= $task['description']?></div> </td>
+                        <td title='Click to Edit'> <div class='editable' onclick="makeElementEditable(this)" onblur="updateTask(this,'<?=$task['id']?>','status')"><?= $task['status']?></div> </td>
+                        <td><?=strftime("%b %d, %Y", strtotime($task['createdAt']))?></td>
+                        <td style="width: 5%;"><button class='btn-danger' onclick="deleteTask('<?=$task['id']?>')"><i class="fa fa-times"></i></button>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
             </tbody>
         </table>
+        <?php echo $paginate->page_links();?>
     </section>
 </div>
 
