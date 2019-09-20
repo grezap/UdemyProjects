@@ -9,84 +9,86 @@ using Uplift.Models;
 namespace Uplift.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class FrequencyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public FrequencyController(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-
             return View();
         }
 
-        public IActionResult Upsert(int? id) 
+        public IActionResult Upsert(int? id)
         {
-            Category category = new Category();
+            Frequency frequency = new Frequency();
 
             if (id == null)
             {
-                return View(category);
+                return View(frequency);
             }
 
-            category = _unitOfWork.Category.Get(id.GetValueOrDefault());
+            frequency = _unitOfWork.Frequency.Get(id.GetValueOrDefault());
 
-            if (category == null)
+            if (frequency == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(frequency);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken] // if a malicious user posts a form with invalid data then the request will be thrown away
-        public IActionResult Upsert(Category category)
+        public IActionResult Upsert(Frequency frequency)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(frequency);
             }
 
-            if (category.Id == 0)
+            if (frequency.Id == 0)
             {
-                _unitOfWork.Category.Add(category);
+                _unitOfWork.Frequency.Add(frequency);
             }
             else
             {
-                _unitOfWork.Category.Update(category);
+                _unitOfWork.Frequency.Update(frequency);
             }
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
-        #region API CALLS 
+
+
+        #region API CALLS
 
         [HttpGet]
-        public IActionResult GetAll() 
+        public IActionResult GetAll()
         {
-            return Json(new { data = _unitOfWork.Category.GetAll() });
+            return Json(new { data = _unitOfWork.Frequency.GetAll() });
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id) 
+        public IActionResult Delete(int id)
         {
-            var objFromDb = _unitOfWork.Category.Get(id);
+            var objFromDb = _unitOfWork.Frequency.Get(id);
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting." });
             }
 
-            _unitOfWork.Category.Remove(objFromDb);
+            _unitOfWork.Frequency.Remove(objFromDb);
             _unitOfWork.Save();
 
             return Json(new { success = true, message = "Deleted Successfully." });
         }
 
         #endregion
+
     }
 }
