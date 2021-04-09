@@ -13,13 +13,13 @@
             background-color: #a39e9e;
             font-family: 'Arial Narrow Bold', sans-serif;
           ">
-                {{ Designation }}
+                {{ Designation | uppercase }}
             </div>
             <div class="col-12 text-center mt-2">
                 <img src="assets/user.png" width="120px" />
             </div>
             <div class="col-12 text-center pt-2 pb-2 font-weight-bold" style="font-family: Tahoma">
-                {{ Username }}
+                {{ Username | lowercase }}
             </div>
             <div class="col-12 text-center pt-2 pb-2" style="font-family: Arial">
                 TEAM SUMMARY
@@ -42,7 +42,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         UPCOMING PROJECTS
-                        <span class="badge badge-secondary badge-pill" style="font-size: 13px">{{ UpComingProjects }}</span>
+                        <span class="badge badge-secondary badge-pill" style="font-size: 13px">{{ UpComingProjects | percent }}</span>
                     </li>
                 </ul>
             </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="col-12">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" *ngFor="let client of Clients">{{ client }}</li>
+                    <li class="list-group-item" *ngFor="let client of Clients">{{ client | slice: 0:10}}</li>
                 </ul>
             </div>
         </div>
@@ -67,7 +67,7 @@
                                 Project A
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#" *ngFor="let project of Projects">{{ project }}</a>
+                                <a class="dropdown-item" href="#" *ngFor="let project of Projects" onclick="return false" (click)="onProjectChange($event)">{{ project }}</a>
                             </div>
                         </div>
                     </div>
@@ -92,15 +92,15 @@
                 <table class="table table-borderless">
                     <tr>
                         <td>Project Cost</td>
-                        <td>${{ ProjectCost }}</td>
+                        <td>{{ ProjectCost | currency:"EUR" }}</td>
                     </tr>
                     <tr>
                         <td>Current Expenditure</td>
-                        <td>${{ CurrentExpenditure }}</td>
+                        <td>{{ CurrentExpenditure | currency:"EUR" }}</td>
                     </tr>
                     <tr>
                         <td>Available Funds</td>
-                        <td>${{ AvailableFunds }}</td>
+                        <td>{{ AvailableFunds | currency:"EUR" }}</td>
                     </tr>
                 </table>
             </div>
@@ -144,7 +144,7 @@
                                 </button>
                             </h2>
                         </div>
-                        <div [id]="'cardbody' + i" class="collapse" data-parent="#accordion1">
+                        <div [id]="'cardbody' + i" class="collapse" data-parent="#accordion1" [ngClass]="(i == 0)?'show':''">
                             <div class="card-body">
                                 <table class="table">
                                     <thead>
@@ -157,7 +157,7 @@
                                     <tbody>
                                         <tr *ngFor="let member of teamMembersGroup.Members">
                                             <td>{{ member.ID }}</td>
-                                            <td>{{ member.Name }}</td>
+                                            <td [style.color]="(member.Status == 'Busy')? 'red' :'black' ">{{ member.Name }}</td>
                                             <td>{{ member.Status }}</td>
                                         </tr>
                                     </tbody>
