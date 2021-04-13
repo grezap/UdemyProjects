@@ -16,15 +16,15 @@ namespace MvcTaskManager.Models
         public int TeamSize { get; set; }
     }
 
-    public class TaskManagerDbContext : DbContext
-    {
-        public DbSet<Project> Projects { get; set; }
+    //public class TaskManagerDbContext : DbContext
+    //{
+    //    public DbSet<Project> Projects { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=localhost,14331;Database=TaskManager;User Id=sa;Password=tz!m@k0s2021!;");
-        }
-    }
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //    {
+    //        base.OnConfiguring(optionsBuilder);
+    //        optionsBuilder.UseSqlServer("Server=localhost,14331;Database=TaskManager;User Id=sa;Password=tz!m@k0s2021!;");
+    //    }
+    //}
 
 }

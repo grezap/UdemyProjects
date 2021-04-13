@@ -9,20 +9,26 @@ import { map } from 'rxjs/operators';
 })
 export class LoginService {
 
+  //baseApi:string = "http://localhost:13629/api";
+  baseApi:string = "http://localhost:61384/api";
+  
   currentUserName:string = "";
+  
   constructor(private httpClient:HttpClient) { }
 
   public Login(loginViewModel:LoginViewModel):Observable<any>{
-    return this.httpClient.post<any>("/authenticate",loginViewModel, {responseType: "json"})
+    return this.httpClient.post<any>(this.baseApi + "/authenticate",loginViewModel, {responseType: "json"})
     .pipe(map(user => {
       if(user){
-        this.currentUserName = user.UserName;
+        this.currentUserName = user.userName;
+        sessionStorage.currentUser = JSON.stringify(user);
       }
       return user;
      }));
   }
 
 public LogOut(){
+  sessionStorage.removeItem("currentUser");
   this.currentUserName = "";
 }
 

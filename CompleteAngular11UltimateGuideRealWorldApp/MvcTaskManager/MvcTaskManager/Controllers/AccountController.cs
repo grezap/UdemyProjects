@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using MvcTaskManager.ServiceContracts;
 using MvcTaskManager.ViewModels;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MvcTaskManager.Controllers
 {
+    [EnableCors("MyPolicy")]
     [ApiController]
     public class AccountController : Controller
     {
@@ -19,7 +21,7 @@ namespace MvcTaskManager.Controllers
         }
 
         [HttpPost]
-        [Route("authenticate")]
+        [Route("api/authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] LoginViewModel loginViewModel)
         {
             var user = await _usersService.Authenticate(loginViewModel);
