@@ -24,10 +24,6 @@ export class ProjectsComponent implements OnInit {
     this.projectsService.getAllProjects().subscribe(
       (response:Project[])=>{
         this.projects = response;
-      },
-      (error) => {
-        console.log(error);
-        console.log('authentication failed');
       }
     );
   }

@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MvcTaskManager.ServiceContracts;
 using MvcTaskManager.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MvcTaskManager.Controllers
@@ -17,7 +14,7 @@ namespace MvcTaskManager.Controllers
 
         public AccountController(IUsersService usersService)
         {
-            this._usersService = usersService;
+            _usersService = usersService;
         }
 
         [HttpPost]
