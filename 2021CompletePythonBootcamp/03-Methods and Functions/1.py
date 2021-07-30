@@ -31,3 +31,19 @@ def check_even_list(num_list):
 
 print(check_even_list([1,2,3]))
 
+# *args => arguments and **kwargs => keyword arguments
+def myfunc(*args): # *args allows us to treat the incoming arguments as a tuple of parameters, this way we can pass as many arguments as we need
+    for item in args:
+        print(item)
+    return sum(args) * 0.05
+
+def myfunc(**kwargs): # **kwrags is a dictionary of arguments
+    if 'fruit' in kwargs:
+        print ('fruit is {}'.format(kwargs['fruit']))
+    else:
+        print('Did Not Find Any fruit')
+
+myfunc(fruit='apple',veggie = 'lettuce')
+
+
+
