@@ -1,0 +1,19 @@
+﻿@if (Movies == null)
+{
+    <img src="https://i.stack.imgur.com/MEBIB.gif" />
+}
+else if (Movies.Count == 0)
+{
+    <text>There are no records to show</text>
+}
+else
+{
+    @foreach (var mov in Movies)
+    {
+        <IndividualMovie Movie="mov"/>
+    }
+}
+
+@code {
+    [Parameter] public List<Movie> Movies { get; set; }
+}

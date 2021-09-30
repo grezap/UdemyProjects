@@ -1,0 +1,23 @@
+﻿@page "/"
+
+<div>
+    <h3>Movies</h3>
+    <MoviesList Movies="movies" />
+</div>
+
+
+@code{
+    private List<Movie> movies;
+    //special method running when the razor file loads
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(3000);
+
+        movies = new List<Movie>
+{
+            new Movie { Title = "Spiderman", ReleaseDate = DateTime.Now },
+            new Movie { Title = "Moana", ReleaseDate = DateTime.Now },
+            new Movie { Title = "Inception", ReleaseDate = DateTime.Now }
+        };
+    }
+}
