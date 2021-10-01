@@ -1,19 +1,25 @@
-﻿@if (Movies == null)
-{
-    <img src="https://i.stack.imgur.com/MEBIB.gif" />
-}
-else if (Movies.Count == 0)
-{
-    <text>There are no records to show</text>
-}
-else
-{
-    @foreach (var mov in Movies)
-    {
-        <IndividualMovie Movie="mov"/>
-    }
-}
+﻿@inject IJSRuntime js
+
+<input type="checkbox" @bind="displayButtons" />
+
+<GenericList List="Movies">
+    <ElementTemplate Context="mov">
+        <IndividualMovie Movie="mov" DisplayButtons="displayButtons" DeleteMovie="DeleteMovie" />
+    </ElementTemplate>
+</GenericList>
 
 @code {
     [Parameter] public List<Movie> Movies { get; set; }
+    bool displayButtons = true;
+
+    private async Task DeleteMovie(Movie movie)
+    {
+        await js.MyFunction("custom message");
+        var confirmed = await js.Confirm($"Are You Sure You Want To Delete {movie.Title} ?");
+        if (confirmed)
+        {
+            Movies.Remove(movie);
+        }
+    }
+
 }

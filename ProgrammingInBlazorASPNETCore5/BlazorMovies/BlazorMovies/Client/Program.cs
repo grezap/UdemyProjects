@@ -1,3 +1,4 @@
+using BlazorMovies.Client.Helpers;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +19,14 @@ namespace BlazorMovies.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
+            ConfigureServices(builder.Services);
             await builder.Build().RunAsync();
         }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient<IRepository, RepositoryInMemory>();
+        }
+
     }
 }

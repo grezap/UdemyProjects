@@ -1,23 +1,30 @@
 ﻿@page "/"
+@inject IRepository repository
 
 <div>
     <h3>Movies</h3>
     <MoviesList Movies="movies" />
 </div>
 
+<div>
+    <h2>Create a Movie</h2>
+    <DummyTextbox @attributes="dummyTextboxParameters" />
+</div>
 
 @code{
     private List<Movie> movies;
+
+    private IDictionary<string, object> dummyTextboxParameters = new Dictionary<string, object>()
+    {
+        { "placeholder", "new movie name" },
+        { "disabled","true"}
+    };
+
     //special method running when the razor file loads
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(3000);
 
-        movies = new List<Movie>
-{
-            new Movie { Title = "Spiderman", ReleaseDate = DateTime.Now },
-            new Movie { Title = "Moana", ReleaseDate = DateTime.Now },
-            new Movie { Title = "Inception", ReleaseDate = DateTime.Now }
-        };
+        movies = repository.GetMovies();
     }
 }
