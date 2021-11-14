@@ -1,9 +1,5 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-h1{
-    color: blue
-}
-
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -52,3 +48,14 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.image {
+    width: 200px;
+    height: 200px;
+    transition: all .2s ease-in-out;
+}
+
+.selectable-image:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}

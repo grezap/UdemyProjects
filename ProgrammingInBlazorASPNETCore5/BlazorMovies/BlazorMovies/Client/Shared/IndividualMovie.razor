@@ -1,20 +1,22 @@
-﻿<p>Title: @Movie.Title</p>
-<p>Release Date: @Movie.ReleaseDate.ToString("yyyy-MM-dd")</p>
-@if (DisplayButtons)
-{
+﻿<div class="individual-movie-container">
+    <a href="@movieURL">
+        <img src="@Movie.Poster" alt="Poster" class="movie-poster" />
+    </a>
+    <p><a href="@movieURL">@Movie.TitleBrief</a></p>
     <div>
-        <button @onclick="@(()=>DeleteMovie.InvokeAsync(Movie))">Delete</button>
+        <a class="btn btn-info">Edit</a>
+        <button type="button" class="btn btn-danger" @onclick="@(() => DeleteMovie.InvokeAsync(Movie))">Delete</button>
     </div>
-}
+</div>
 
 @code {
     [Parameter] public Movie Movie { get; set; }
-    [Parameter] public bool DisplayButtons { get; set; } = false;
     //call Method from the parent component where this child component has been called
     [Parameter] public EventCallback<Movie> DeleteMovie { get; set; }
+    private string movieURL = string.Empty;
 
-    void Delete()
+    protected override void OnInitialized()
     {
-        Console.WriteLine($"Deleting ${Movie.Title}");
+        movieURL = $"movie/{Movie.Id}/{Movie.Title.Replace(" ","-")}";
     }
 }

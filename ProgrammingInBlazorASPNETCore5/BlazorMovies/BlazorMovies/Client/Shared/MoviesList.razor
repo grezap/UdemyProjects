@@ -1,16 +1,15 @@
 ﻿@inject IJSRuntime js
 
-<input type="checkbox" @bind="displayButtons" />
-
-<GenericList List="Movies">
-    <ElementTemplate Context="mov">
-        <IndividualMovie Movie="mov" DisplayButtons="displayButtons" DeleteMovie="DeleteMovie" />
-    </ElementTemplate>
-</GenericList>
+<div class="movies-container">
+    <GenericList List="Movies">
+        <ElementTemplate Context="mov">
+            <IndividualMovie Movie="mov" DeleteMovie="DeleteMovie" />
+        </ElementTemplate>
+    </GenericList>
+</div>
 
 @code {
     [Parameter] public List<Movie> Movies { get; set; }
-    bool displayButtons = true;
 
     private async Task DeleteMovie(Movie movie)
     {

@@ -6,25 +6,13 @@
     <MoviesList Movies="movies" />
 </div>
 
-<div>
-    <h2>Create a Movie</h2>
-    <DummyTextbox @attributes="dummyTextboxParameters" />
-</div>
-
 @code{
-    private List<Movie> movies;
 
-    private IDictionary<string, object> dummyTextboxParameters = new Dictionary<string, object>()
-    {
-        { "placeholder", "new movie name" },
-        { "disabled","true"}
-    };
+    private List<Movie> movies;
 
     //special method running when the razor file loads
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(3000);
-
         movies = repository.GetMovies();
     }
 }
