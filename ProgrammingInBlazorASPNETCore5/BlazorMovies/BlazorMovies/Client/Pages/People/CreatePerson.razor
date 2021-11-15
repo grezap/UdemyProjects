@@ -1,5 +1,14 @@
 ﻿@page "/person/create"
 
-@code {
+<h3>Create Person</h3>
 
+<PersonForm Person="Person" OnValidSubmit="Create" />
+
+@code {
+    Person Person = new Person();
+
+    private void Create()
+    {
+        Console.WriteLine("Person Created");
+    }
 }
