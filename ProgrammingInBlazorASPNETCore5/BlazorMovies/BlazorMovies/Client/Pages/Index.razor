@@ -1,35 +1,28 @@
 ﻿@page "/"
 @page "/index"
-@inject IRepository repository
+@inject IMoviesRepository moviesRepository
 
 <div>
-    <h3>Movies</h3>
-    <MoviesList Movies="movies" />
+    <h3>In Theaters</h3>
+    <MoviesList Movies="inTheaters" />
 </div>
 
-<CustomTypeahead SearchMethod="SearchMethod">
-    <ResultTemplate>
-        @context
-    </ResultTemplate>
-</CustomTypeahead>
+<div>
+    <h3>Upcoming Releases</h3>
+    <MoviesList Movies="upcomingReleases" />
+</div>
 
 @code{
 
-    private List<Movie> movies;
+    private List<Movie> inTheaters;
+    private List<Movie> upcomingReleases;
 
     //special method running when the razor file loads
     protected override async Task OnInitializedAsync()
     {
-        movies = repository.GetMovies();
-    }
-
-    private async Task<IEnumerable<string>> SearchMethod(string searchText)
-    {
-        await Task.Delay(2000);
-        if (searchText == "test")
-        {
-            return Enumerable.Empty<string>();
-        }
-        return new List<string>() { "Felipe", "Gavilanch2"};
+        var response = await moviesRepository.GetIndexPageDTO();
+        inTheaters = response.InTheaters;
+        upcomingReleases = response.UpcomingReleases;
+        
     }
 }

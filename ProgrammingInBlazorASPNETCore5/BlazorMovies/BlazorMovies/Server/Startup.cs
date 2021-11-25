@@ -1,3 +1,4 @@
+using BlazorMovies.Server.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,7 +25,11 @@ namespace BlazorMovies.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddControllersWithViews();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IFileStorageService, InAppStorageService>();
+            services.AddHttpContextAccessor();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddRazorPages();
         }
 

@@ -1,4 +1,6 @@
-﻿<EditForm Model="Movie" OnValidSubmit="OnValidSubmit">
+﻿@inject IPersonRepository personRepository
+
+<EditForm Model="Movie" OnValidSubmit="OnDataAnnotationsValidated">
     <DataAnnotationsValidator />
 
     <div class="form-group">
@@ -51,7 +53,7 @@
                     @person.Name
                 </MyResultTemplate>
                 <MyListTemplate>
-                    @person.Name
+                    @person.Name / <input type="text" placeholder="Character" @bind="person.Character" />
                 </MyListTemplate>
             </MultipleSelectorTypeahead>
         </div>
@@ -94,8 +96,15 @@
 
     private async Task<IEnumerable<Person>> SearchMethod(string searchText)
     {
-        return new List<Person>() { new Person() { Id = 1, Name = "Tom Holland", Picture="https://m.media-amazon.com/images/M/MV5BYmY2ZTcxZTgtYzhlNS00NzE0LWIxN2ItMjIxNjEwMDU0ZGM2XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_SX624_CR0,0,624,351_AL_.jpg"},
-        new Person() { Id = 2, Name = "Tom Hanks", Picture="https://m.media-amazon.com/images/M/MV5BMTQ2MjMwNDA3Nl5BMl5BanBnXkFtZTcwMTA2NDY3NQ@@._V1_UY317_CR2,0,214,317_AL_.jpg"}, };
+        return await personRepository.GetPeopleByName(searchText);
+    }
+
+    private async void OnDataAnnotationsValidated()
+    {
+        Movie.MoviesGenres = Selected.Select(x => new MoviesGenres { GenreId = int.Parse(x.Key) }).ToList();
+        Movie.MoviesActors = SelectedActors.Select(x => new MoviesActors { PersonId = x.Id, Character = x.Character }).ToList();
+        if(!string.IsNullOrWhiteSpace(Movie.Poster)) { imageURL = null; }
+        await OnValidSubmit.InvokeAsync(null);
     }
 
 }

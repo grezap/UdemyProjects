@@ -1,13 +1,9 @@
 using BlazorMovies.Client.Helpers;
 using BlazorMovies.Client.Repository;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorMovies.Client
@@ -29,6 +25,8 @@ namespace BlazorMovies.Client
             services.AddTransient<IRepository, RepositoryInMemory>();
             services.AddScoped<IHttpService, HttpService>();
             services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IMoviesRepository, MoviesRepository>();
         }
 
     }

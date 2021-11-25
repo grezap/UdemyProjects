@@ -1,4 +1,5 @@
-﻿@page "/people"
+﻿@page "/people/"
+@inject IPersonRepository repository
 
 <h3>People</h3>
 
@@ -6,6 +7,54 @@
     <a class="btn btn-info" href="person/create">Create New Person</a>
 </div>
 
-@code {
+<GenericList List="people">
+    <WholeListTemplate>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in people)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success" href="/person/edit/@item.Id">Edit</a>
+                            <button class="btn btn-danger"@onclick="@(() => DeletePerson(item.Id))">Delete</button>
+                        </td>
+                        <td>@item.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+</GenericList>
 
+@code {
+    List<Person> people;
+    PaginationDTO paginationDTO = new PaginationDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var paginatedResponse = await repository.GetPeople(paginationDTO);
+            people = paginatedResponse.Response;
+            Console.WriteLine(paginatedResponse.TotalAmountPages);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task DeletePerson(int Id)
+    {
+        await repository.DeletePerson(Id);
+        var paginatedResponse = await repository.GetPeople(paginationDTO);
+        people = paginatedResponse.Response;
+        Console.WriteLine(paginatedResponse.TotalAmountPages);
+    }
 }
