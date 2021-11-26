@@ -4,7 +4,7 @@
 <div class="movies-container">
     <GenericList List="Movies">
         <ElementTemplate Context="mov">
-            <IndividualMovie Movie="mov" DeleteMovie="DeleteMovie" />
+            <IndividualMovie Movie="mov" DeleteMovie="DeleteMovie" @key="mov.Id" />
         </ElementTemplate>
     </GenericList>
 </div>

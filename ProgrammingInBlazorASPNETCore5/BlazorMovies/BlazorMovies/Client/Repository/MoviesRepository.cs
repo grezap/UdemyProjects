@@ -3,6 +3,7 @@ using BlazorMovies.Shared.DTOs;
 using BlazorMovies.Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorMovies.Client.Repository
@@ -25,6 +26,14 @@ namespace BlazorMovies.Client.Repository
         public async Task<DetailsMovieDTO> GetDetailsMovieDTO(int id) 
         {
             return await httpService.GetHelper<DetailsMovieDTO>($"{url}/{id}");
+        }
+
+        public async Task<PaginatedResponse<List<Movie>>> GetMoviesFiltered(FilterMoviesDTO filterMoviesDTO)
+        {
+            var responseHTTP = await httpService.Post<FilterMoviesDTO,List<Movie>>($"{url}/filter", filterMoviesDTO);
+            var totalAmountPages = int.Parse(responseHTTP.HttpResponseMessage.Headers.GetValues("totalAmountPages").FirstOrDefault());
+            var paginatedResponse = new PaginatedResponse<List<Movie>>() { Response = responseHTTP.Response, TotalAmountPages = totalAmountPages };
+            return paginatedResponse;
         }
 
         public async Task<int> CreateMovie(Movie movie)

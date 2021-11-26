@@ -2,10 +2,13 @@
 using BlazorMovies.Server.Helpers;
 using BlazorMovies.Shared.DTOs;
 using BlazorMovies.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,6 +31,7 @@ namespace BlazorMovies.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IndexPageDTO>> Get()
         {
             var limit = 6;
@@ -103,6 +107,39 @@ namespace BlazorMovies.Server.Controllers
             _context.Add(movie);
             await _context.SaveChangesAsync();
             return movie.Id;
+        }
+
+        [HttpPost("filter")]
+        public async Task<ActionResult<List<Movie>>> Filter(FilterMoviesDTO filterMoviesDTO)
+        {
+            var movieQuery = _context.Movies.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filterMoviesDTO.Title))
+            {
+                movieQuery = movieQuery.Where(x => x.Title.Contains(filterMoviesDTO.Title));
+            }
+
+            if (filterMoviesDTO.InTheaters)
+            {
+                movieQuery = movieQuery.Where(x => x.InTheaters);
+            }
+
+            if (filterMoviesDTO.UpcomingReleases)
+            {
+                var today = DateTime.Today;
+                movieQuery = movieQuery.Where(x => x.ReleaseDate > today);
+            }
+
+            if(filterMoviesDTO.GenreId != 0)
+            {
+                movieQuery = movieQuery.Where(x => x.MoviesGenres.Select(y => y.GenreId).Contains(filterMoviesDTO.GenreId));
+            }
+
+            await HttpContext.InsertPaginationParametersInResponse(movieQuery, filterMoviesDTO.RecordsPerPage);
+
+            var movies = await movieQuery.Paginate(filterMoviesDTO.Pagination).ToListAsync();
+
+            return movies;
         }
 
         [HttpPut]
