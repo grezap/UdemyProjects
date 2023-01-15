@@ -1,6 +1,14 @@
-﻿using Confluent.Kafka;
+﻿
+using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
+using KafkaConsumer.Model;
+using KafkaConsumer.Model.TestMySql;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using NJsonSchema.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +20,11 @@ namespace KafkaConsumer
     public class ConsumerService : IHostedService
     {
         private readonly ILogger<ConsumerService> _logger;
-        private readonly string _topic = "demo_dotnet";
+        private readonly string _topic = "testgzav5.test_gza.test_table";
         private IConsumer<string, string> _consumer;
         private bool _cancelled = false;
+        private CachedSchemaRegistryClient _schemaRegistry;
+        CancellationTokenSource _cancelToken;
 
         public ConsumerService(ILogger<ConsumerService> logger)
         {
@@ -24,15 +34,21 @@ namespace KafkaConsumer
 
         private void BootstrapConsumer()
         {
+            var schemaRegistryConfig = new SchemaRegistryConfig();
+            schemaRegistryConfig.Url= "http://schemaregistry:8081";
+
             var config = new ConsumerConfig();
-            config.BootstrapServers = "localhost:9092";
-            config.GroupId = "demo-dotnet-consumer-group";
+            config.BootstrapServers = "brokerone:9092,brokertwo:9092,brokerthree:9092";
+            config.GroupId = "demo-dotnet-consumer-mysql-group";
             config.AutoOffsetReset = AutoOffsetReset.Earliest;
             config.PartitionAssignmentStrategy = PartitionAssignmentStrategy.CooperativeSticky;
             config.StatisticsIntervalMs = 5000;
             config.SessionTimeoutMs = 6000;
-
+            
+            _schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
             _consumer = new ConsumerBuilder<string, string>(config)
+                //.SetKeyDeserializer(Deserializers.Utf8)
+                //.SetValueDeserializer(JsonConvert.DeserializeObject<TestMySqlJson>())
                 .SetErrorHandler((_, e) => _logger.LogError($"Error: {e.Reason}"))
                 //.SetStatisticsHandler((_,json) => { _logger.LogInformation($"Statistics: {json}"); })
                 //.SetPartitionsAssignedHandler((c, partitions) => 
@@ -66,13 +82,17 @@ namespace KafkaConsumer
 
             _consumer.Subscribe(_topic);
 
-            var cancelToken = new CancellationTokenSource();
+            _cancelToken = new CancellationTokenSource();
 
             try
             {
                 while (!_cancelled)
                 {
-                    var cr = _consumer.Consume(cancelToken.Token);
+                    var cr = _consumer.Consume(_cancelToken.Token);
+                    var testModel = cr?.Message?.Value;
+                    
+                    var after = JsonConvert.DeserializeObject<Model.TestMySql.TestMySqlJson>(testModel);
+
                     _logger.LogInformation($"Consumed event from topic {_topic} with key {cr.Message.Key,-10} and value {cr.Message.Value}");
                 }
             }
@@ -89,6 +109,7 @@ namespace KafkaConsumer
 
         private void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
         {
+            _cancelToken?.Cancel();
             e.Cancel = true;
             _cancelled = true;
         }
