@@ -94,6 +94,7 @@ namespace KafkaConsumer
                     var after = JsonConvert.DeserializeObject<Model.TestMySql.TestMySqlJson>(testModel);
 
                     _logger.LogInformation($"Consumed event from topic {_topic} with key {cr.Message.Key,-10} and value {cr.Message.Value}");
+                    _logger.LogInformation($"Serialized: {JsonConvert.SerializeObject(after)}");
                 }
             }
             catch (OperationCanceledException)

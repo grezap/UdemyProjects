@@ -10,11 +10,11 @@ namespace KafkaConsumer.Model.TestMySql
     {
         public int id { get; set; }
         public string descr { get; set; }
-        public long descr_date { get; set; }
-        public int hasdescr { get; set; }
-        public float doubledescr { get; set; }
-        public decimal decimaldescr { get; set; }
-        public int bigintdescr { get; set; }
+        public long? descr_date { get; set; }
+        public bool? hasdescr { get; set; }
+        public double? doubledescr { get; set; }
+        public double? decimaldescr { get; set; }
+        public long? bigintdescr { get; set; }
     }
 
 }

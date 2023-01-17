@@ -9,7 +9,7 @@ namespace KafkaConsumer.Model.TestMySql
 
     public class TestMySqlJson
     {
-        public Before before { get; set; }
+        public After before { get; set; }
         public After after { get; set; }
         public Source source { get; set; }
         public string op { get; set; }
