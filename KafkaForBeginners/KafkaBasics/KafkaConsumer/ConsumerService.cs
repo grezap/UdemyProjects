@@ -39,8 +39,10 @@ namespace KafkaConsumer
 
             var config = new ConsumerConfig();
             config.BootstrapServers = "brokerone:9092,brokertwo:9092,brokerthree:9092";
-            config.GroupId = "demo-dotnet-consumer-mysql-group";
+            config.GroupId = "demo-dotnet-consumer-mysql-group1";
             config.AutoOffsetReset = AutoOffsetReset.Earliest;
+            config.EnableAutoOffsetStore = false;
+            config.EnableAutoCommit = false;
             config.PartitionAssignmentStrategy = PartitionAssignmentStrategy.CooperativeSticky;
             config.StatisticsIntervalMs = 5000;
             config.SessionTimeoutMs = 6000;
@@ -83,18 +85,30 @@ namespace KafkaConsumer
             _consumer.Subscribe(_topic);
 
             _cancelToken = new CancellationTokenSource();
-
+            int counter = 0;
             try
             {
                 while (!_cancelled)
                 {
                     var cr = _consumer.Consume(_cancelToken.Token);
                     var testModel = cr?.Message?.Value;
-                    
-                    var after = JsonConvert.DeserializeObject<Model.TestMySql.TestMySqlJson>(testModel);
+
+                    //var after = JsonConvert.DeserializeObject<Model.TestMySql.TestMySqlJson>(testModel);
+
+                    _consumer.Assign(cr.TopicPartition);
+
+                    if (counter == 5)
+                    {
+                        _consumer.Unassign();
+                    }
+                    else
+                    {
+                        //_consumer.Commit();
+                        counter++;
+                    }
 
                     _logger.LogInformation($"Consumed event from topic {_topic} with key {cr.Message.Key,-10} and value {cr.Message.Value}");
-                    _logger.LogInformation($"Serialized: {JsonConvert.SerializeObject(after)}");
+                    //_logger.LogInformation($"Serialized: {JsonConvert.SerializeObject(after)}");
                 }
             }
             catch (OperationCanceledException)
