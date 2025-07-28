@@ -1,9 +1,10 @@
 ﻿using IMS.CoreBusiness;
+using IMS.UseCases.Inventories.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 
 namespace IMS.UseCases.Inventories
 {
-    public class ViewInventoriesByNameUseCase
+    public class ViewInventoriesByNameUseCase : IViewInventoriesByNameUseCase
     {
         #region Fields
         private readonly IInventoryRepository _inventoryRepository;
@@ -17,7 +18,7 @@ namespace IMS.UseCases.Inventories
         #endregion
 
         #region Methods
-        public async Task<IEnumerable<Inventory>> ExecuteAsync(string name = "") 
+        public async Task<IEnumerable<Inventory>> ExecuteAsync(string name = "")
         {
             return await _inventoryRepository.GetInventoriesByNameAsync(name);
         }
