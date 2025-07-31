@@ -1,5 +1,35 @@
 ﻿@page "/editinventory/{invId:int}"
 
 <h3>Edit Inventory</h3>
+<br />
+@if(Inventory is not null)
+{
+    <EditForm Model="Inventory" FormName="formInventory" OnValidSubmit="Update">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <InputNumber @bind-Value="Inventory.InventoryId" hidden></InputNumber>
+
+        <div class="form-group">
+            <label for="name">Inventory Name</label>
+            <InputText id="name" @bind-Value="Inventory.InventoryName" class="form-control"></InputText>
+            <ValidationMessage For="() => Inventory.InventoryName"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <InputNumber id="quantity" @bind-Value="Inventory.Quantity" class="form-control"></InputNumber>
+            <ValidationMessage For="() => Inventory.Quantity"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <InputNumber id="price" @bind-Value="Inventory.Price" class="form-control"></InputNumber>
+            <ValidationMessage For="() => Inventory.Price"></ValidationMessage>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Update</button>
+        &nbsp;
+        <a href="/inventories" class="btn btn-primary">Cancel</a>
+    </EditForm>
+}
 
 
