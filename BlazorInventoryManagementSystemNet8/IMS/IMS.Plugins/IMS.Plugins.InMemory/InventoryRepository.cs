@@ -15,9 +15,9 @@ namespace IMS.Plugins.InMemory
             _inventories = new List<Inventory>()
             {
                 new Inventory { InventoryId = 1, InventoryName = "Bike Seat", Quantity = 10, Price = 2 }, 
-                new Inventory { InventoryId = 1, InventoryName = "Bike Body", Quantity = 10, Price = 15 }, 
-                new Inventory { InventoryId = 1, InventoryName = "Bike Wheels", Quantity = 20, Price = 8 }, 
-                new Inventory { InventoryId = 1, InventoryName = "Bike Pedals", Quantity = 20, Price = 1 } 
+                new Inventory { InventoryId = 2, InventoryName = "Bike Body", Quantity = 10, Price = 15 }, 
+                new Inventory { InventoryId = 3, InventoryName = "Bike Wheels", Quantity = 20, Price = 8 }, 
+                new Inventory { InventoryId = 4, InventoryName = "Bike Pedals", Quantity = 20, Price = 1 } 
             };
         }
         #endregion
@@ -60,6 +60,14 @@ namespace IMS.Plugins.InMemory
         public async Task<Inventory> GetInventoryByIdAsync(int inventoryId)
         {
             return await Task.FromResult(_inventories.First(x => x.InventoryId == inventoryId));
+        }
+
+        public async Task DeleteInventoryByIdAsync(int inventoryId)
+        {
+            var inventory = _inventories.FirstOrDefault(x => x.InventoryId == inventoryId);
+            if(inventory != null)
+                _inventories.Remove(inventory);
+            await Task.CompletedTask;
         }
         #endregion
     }

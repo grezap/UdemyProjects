@@ -19,9 +19,9 @@ namespace IMS.WebApp.Components.Controls
         #endregion
 
         #region Methods
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            inventories = (await ViewInventoriesByNameUseCase!.ExecuteAsync(SearchInventoryFilter??String.Empty)).ToList();
+            inventories = (await ViewInventoriesByNameUseCase!.ExecuteAsync(SearchInventoryFilter ?? String.Empty)).ToList();
         }
         #endregion
     }

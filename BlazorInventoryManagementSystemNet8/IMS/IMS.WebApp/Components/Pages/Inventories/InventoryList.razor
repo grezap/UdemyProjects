@@ -2,9 +2,8 @@
 
 <h3>Inventory List</h3>
 <br />
-<EditForm>
-
-</EditForm>
-<InventoryListComponent SearchInventoryFilter=""></InventoryListComponent>
+<SearchComponent OnSearch="HandleSearch"></SearchComponent>
+<br />
+<InventoryListComponent SearchInventoryFilter="@_inventoryNameToSearch"></InventoryListComponent>
 <br />
 <a href="/addinventory" class="btn btn-primary">Add Inventory</a>

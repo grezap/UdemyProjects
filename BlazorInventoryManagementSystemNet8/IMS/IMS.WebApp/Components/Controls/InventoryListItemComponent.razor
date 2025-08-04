@@ -9,5 +9,13 @@
                 Edit
             </a>
         </td>
+        <td>
+            <EditForm Enhance="true" 
+                Model="Inventory" 
+                FormName="@($"form-delete-inventory-{Inventory.InventoryId}")" 
+                OnValidSubmit="() => DeleteInventory(Inventory.InventoryId)">
+                <button type="submit" class="btn btn-light">Delete</button>
+            </EditForm>
+        </td>
     </tr>
 }
