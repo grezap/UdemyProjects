@@ -1,0 +1,23 @@
+﻿<div class="input-group">
+    <input class="form-control"
+               placeholder="Type something here to search"
+               @bind-value="SearchFilter" @bind-value:event="oninput">
+    </input>
+    <button type="button" class="btn-success input-group-text" @onclick="HandleSearch">Search</button>
+</div>
+@if(_inventories is not null && _inventories.Count > 0)
+{
+    <div class="search-result">
+        <ul>
+            @foreach (var inv in _inventories)
+            {
+                <li @key="inv.InventoryId" @onclick="() =>{ HandleSelectInventory(inv); }">
+                    @inv.InventoryName
+                </li>
+            }
+        </ul>
+    </div>
+
+}
+
+

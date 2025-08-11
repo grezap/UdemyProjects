@@ -2,6 +2,8 @@ using IMS.Plugins.InMemory;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.Inventories.Interfaces;
 using IMS.UseCases.PluginInterfaces;
+using IMS.UseCases.Products;
+using IMS.UseCases.Products.Interfaces;
 using IMS.WebApp.Components;
 
 namespace IMS.WebApp
@@ -13,7 +15,8 @@ namespace IMS.WebApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents();
+            builder.Services.AddRazorComponents()
+                            .AddInteractiveServerComponents();
 
             builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
             builder.Services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
@@ -21,6 +24,13 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
             builder.Services.AddTransient<IViewInventoryByIdUseCase, ViewInventoryByIdUseCase>();
             builder.Services.AddTransient<IDeleteInventoryUseCase, DeleteInventoryUseCase>();
+
+            builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+            builder.Services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
+            builder.Services.AddTransient<IViewProductByIdUseCase, ViewProductByIdUseCase>();
+            builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
+            builder.Services.AddTransient<IEditProductUseCase, EditProductUseCase>();
+            builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
 
             var app = builder.Build();
 
@@ -37,7 +47,8 @@ namespace IMS.WebApp
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapRazorComponents<App>();
+            app.MapRazorComponents<App>()
+               .AddInteractiveServerRenderMode();
 
             app.Run();
         }
