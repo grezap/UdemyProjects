@@ -1,0 +1,39 @@
+﻿@page "/purchase"
+@rendermode InteractiveServer 
+
+<h3>Purchase Inventory</h3>
+<br />
+
+<EditForm Model="_purchaseViewModel" OnValidSubmit="Purchase">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <div class="form-group">
+        <label for="po">Purchase Order #</label>
+        <InputText id="po" @bind-Value="_purchaseViewModel.PONumber" class="form-control"></InputText>
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <AutoCompleteComponent Label="Inventory to Purchase" SearchFunction="SearchInventory" OnItemSelected="HandleItemSelected"></AutoCompleteComponent>
+                @if (_purchaseViewModel.InventoryPrice > 0)
+                {
+                    <text>Price:</text>
+                    @_purchaseViewModel.InventoryPrice.ToString("c")
+                }
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty" @bind-Value="_purchaseViewModel.QuanityToPurchase" class="form-control"></InputNumber>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Purchase</button>
+
+</EditForm>
+
+
+

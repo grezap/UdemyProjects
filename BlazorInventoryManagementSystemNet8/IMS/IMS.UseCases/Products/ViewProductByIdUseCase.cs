@@ -1,5 +1,4 @@
 ﻿using IMS.CoreBusiness;
-using IMS.UseCases.Inventories.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 using IMS.UseCases.Products.Interfaces;
 
@@ -19,7 +18,7 @@ namespace IMS.UseCases.Inventories
         #endregion
 
         #region Methods
-        public async Task<Product> ExecuteAsync(int productId)
+        public async Task<Product?> ExecuteAsync(int productId)
         {
             return await _productRepository.GetProductByIdAsync(productId);
         }

@@ -1,0 +1,25 @@
+﻿<div class="form-group">
+    <label for="search">@Label</label>
+    <input type="text" class="form-control" @bind-value="UserInput" @bind-value:event="oninput" @onkeyup="OnKeyUp" />
+</div>
+@if (_searchResults is not null && _searchResults.Count > 0)
+{
+    <div class="search-result">
+        <ul>
+            @{
+                int itemIndex = 0;
+                foreach (var item in _searchResults)
+                {
+                    <li @key=item.Id 
+                        class="@(itemIndex == _currentItemIndex?"selected":"")" 
+                        @onclick="() => HandleSelectItem(item)">
+                        @item.Name
+                    </li>
+                    itemIndex++;
+                }
+            }
+        </ul>
+    </div>
+}
+
+
