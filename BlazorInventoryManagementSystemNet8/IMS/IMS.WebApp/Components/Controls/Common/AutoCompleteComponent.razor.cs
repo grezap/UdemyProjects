@@ -18,7 +18,7 @@ namespace IMS.WebApp.Components.Controls.Common
         public string Label { get; set; } = string.Empty;
 
         [Parameter]
-        public Func<string, List<ItemViewModel>>? SearchFunction { get; set; }
+        public Func<string, Task<List<ItemViewModel>>>? SearchFunction { get; set; }
 
         [Parameter]
         public EventCallback<ItemViewModel> OnItemSelected { get; set; }
@@ -31,13 +31,23 @@ namespace IMS.WebApp.Components.Controls.Common
                 _userInput = value;
                 if(!string.IsNullOrWhiteSpace(_userInput) && SearchFunction != null)
                 {
-                    _searchResults = SearchFunction(_userInput);
+                    ViewItemsAsync();
                 }
             }
         }
         #endregion
 
         #region Methods
+
+        private async Task ViewItemsAsync()
+        {
+            if(SearchFunction != null)
+            {
+                _searchResults = await SearchFunction(_userInput);
+                StateHasChanged();
+            }
+        }
+
         private void HandleSelectItem(ItemViewModel? item)
         {
             ClearHighlighting();

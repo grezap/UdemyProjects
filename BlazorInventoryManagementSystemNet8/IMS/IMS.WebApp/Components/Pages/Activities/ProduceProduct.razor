@@ -1,0 +1,33 @@
+﻿@page "/produce"
+@rendermode InteractiveServer
+
+<h3>Produce Product</h3>
+<br />
+
+<EditForm id="produce-form" Model="_produceViewModel" OnValidSubmit="Produce">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <div class="form-group">
+        <label for="po">Production #</label>
+        <InputText id="po" @bind-Value="_produceViewModel.ProductionNumber" class="form-control"></InputText>
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <AutoCompleteComponent Label="Product to Produce" SearchFunction="SearchProduct" OnItemSelected="HandleItemSelected"></AutoCompleteComponent>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty" @bind-Value="_produceViewModel.QuanityToProduce" class="form-control"></InputNumber>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Produce</button>
+
+</EditForm>
+
+

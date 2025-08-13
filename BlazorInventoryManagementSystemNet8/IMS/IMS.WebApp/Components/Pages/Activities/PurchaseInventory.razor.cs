@@ -4,10 +4,11 @@ using IMS.UseCases.Inventories.Interfaces;
 using IMS.WebApp.Components.Controls.Common;
 using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace IMS.WebApp.Components.Pages.Activities
 {
-    public partial class PurchaseInventoryComponent
+    public partial class PurchaseInventory
     {
         #region Fields
         private PurchaseViewModel _purchaseViewModel = new PurchaseViewModel();
@@ -21,12 +22,14 @@ namespace IMS.WebApp.Components.Pages.Activities
         IViewInventoryByIdUseCase? ViewInventoryByIdUseCase { get; set; }
         [Inject]
         IPurchaseInventoryUseCase? PurchaseInventoryUseCase { get; set; }
+        [Inject]
+        IJSRuntime? JSRuntime { get; set; }
         #endregion
 
         #region Methods
-        private List<ItemViewModel>? SearchInventory(string name)
+        private async Task<List<ItemViewModel>?> SearchInventory(string name)
         {
-            var list = ViewInventoriesByNameUseCase!.ExecuteAsync(name).GetAwaiter().GetResult();
+            var list = await ViewInventoriesByNameUseCase!.ExecuteAsync(name);
             if (list == null) return null;
             return list.Select(x => new ItemViewModel { Id = x.InventoryId, Name = x.InventoryName })?.ToList();
         }
@@ -43,6 +46,15 @@ namespace IMS.WebApp.Components.Pages.Activities
             await PurchaseInventoryUseCase!.ExecuteAsync(_purchaseViewModel.PONumber, _selectedInventory, _purchaseViewModel.QuanityToPurchase, "Someone");
             _purchaseViewModel = new PurchaseViewModel();
             _selectedInventory = null;
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            if (firstRender) 
+            {
+                JSRuntime!.InvokeVoidAsync("preventFormSubmission", "purchase-form");
+            }
         }
         #endregion
     }
