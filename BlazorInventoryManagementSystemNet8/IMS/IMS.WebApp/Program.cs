@@ -1,3 +1,6 @@
+using IMS.WebApp.Components.Account;
+using IMS.WebApp.Data;
+using IMS.Plugins.EFCoreSqlServer;
 using IMS.Plugins.InMemory;
 using IMS.UseCases.Activities;
 using IMS.UseCases.Activities.Interfaces;
@@ -9,6 +12,11 @@ using IMS.UseCases.Products.Interfaces;
 using IMS.UseCases.Reports;
 using IMS.UseCases.Reports.Interfaces;
 using IMS.WebApp.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace IMS.WebApp
 {
@@ -18,31 +26,74 @@ namespace IMS.WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //Register services For Identity
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddScoped<IdentityUserAccessor>();
+            builder.Services.AddScoped<IdentityRedirectManager>();
+            builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(options => 
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+                .AddIdentityCookies();
+
+            var authConnectionString = builder.Configuration.GetConnectionString("IMSAccounts") ?? throw new InvalidOperationException("Connection string 'IMSAccounts' not found.");
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(authConnectionString));
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
+
+            builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
             // Add services to the container.
+            builder.Services.AddDbContextFactory<IMSContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("InventoryManagement"));
+            });
+
             builder.Services.AddRazorComponents()
                             .AddInteractiveServerComponents();
 
-            builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+            if (builder.Environment.IsEnvironment("Testing"))
+            {
+                StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
+
+                builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+                builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+                builder.Services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+                builder.Services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
+            }
+            else
+            {
+                builder.Services.AddTransient<IInventoryRepository, InventoryEFCoreRepository>();
+                builder.Services.AddTransient<IProductRepository, ProductEFCoreRepository>();
+                builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionEFCoreRepository>();
+                builder.Services.AddTransient<IProductTransactionRepository, ProductTransactionEFCoreRepository>();
+            }
+
             builder.Services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
             builder.Services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
             builder.Services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
             builder.Services.AddTransient<IViewInventoryByIdUseCase, ViewInventoryByIdUseCase>();
             builder.Services.AddTransient<IDeleteInventoryUseCase, DeleteInventoryUseCase>();
-
-            builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+            
             builder.Services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
             builder.Services.AddTransient<IViewProductByIdUseCase, ViewProductByIdUseCase>();
             builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
             builder.Services.AddTransient<IEditProductUseCase, EditProductUseCase>();
             builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
 
-            builder.Services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
-            builder.Services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
-
             builder.Services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
             builder.Services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
             builder.Services.AddTransient<ISellProductUseCase, SellProductUseCase>();
             builder.Services.AddTransient<ISearchInventoryTransactionsUseCase, SearchInventoryTransactionsUseCase>();
+            builder.Services.AddTransient<ISearchProductTransactionsUseCase, SearchProductTransactionsUseCase>();
 
             var app = builder.Build();
 
@@ -61,6 +112,8 @@ namespace IMS.WebApp
 
             app.MapRazorComponents<App>()
                .AddInteractiveServerRenderMode();
+
+            app.MapAdditionalIdentityEndpoints();
 
             app.Run();
         }

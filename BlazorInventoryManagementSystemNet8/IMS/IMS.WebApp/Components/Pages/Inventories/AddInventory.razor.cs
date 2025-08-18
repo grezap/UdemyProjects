@@ -1,5 +1,6 @@
 using IMS.CoreBusiness;
 using IMS.UseCases.Inventories.Interfaces;
+using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace IMS.WebApp.Components.Pages.Inventories
@@ -8,7 +9,7 @@ namespace IMS.WebApp.Components.Pages.Inventories
     {
         #region Properties
         [SupplyParameterFromForm]
-        private Inventory Inventory { get; set; } = new Inventory();
+        private InventoryViewModel Inventory { get; set; } = new InventoryViewModel();
 
         [Inject]
         public IAddInventoryUseCase? AddInventoryUseCase { get; set; }
@@ -20,7 +21,14 @@ namespace IMS.WebApp.Components.Pages.Inventories
         #region Method
         private async Task Save()
         {
-            await AddInventoryUseCase!.ExecuteAsync(Inventory);
+            var inv = new Inventory()
+            {
+                InventoryId = Inventory.InventoryId,
+                InventoryName = Inventory.InventoryName,
+                Quantity = Inventory.Quantity,
+                Price = Inventory.Price
+            };
+            await AddInventoryUseCase!.ExecuteAsync(inv);
             NavigationManager?.NavigateTo("/inventories");
         }
         #endregion

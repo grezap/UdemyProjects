@@ -1,5 +1,6 @@
 using IMS.CoreBusiness;
 using IMS.UseCases.Inventories.Interfaces;
+using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace IMS.WebApp.Components.Pages.Inventories
@@ -15,7 +16,7 @@ namespace IMS.WebApp.Components.Pages.Inventories
         public int InvId { get; set; }
 
         [SupplyParameterFromForm]
-        private Inventory? Inventory { get; set; }
+        private InventoryViewModel? Inventory { get; set; }
 
         [Inject]
         public IViewInventoryByIdUseCase? ViewInventoryByIdUseCase { get; set; }
@@ -30,14 +31,31 @@ namespace IMS.WebApp.Components.Pages.Inventories
         #region Methods
         protected override async Task OnParametersSetAsync()
         {
-            Inventory ??= await ViewInventoryByIdUseCase!.ExecuteAsync(InvId);
+            if(Inventory is null)
+            {
+                var inv = await ViewInventoryByIdUseCase!.ExecuteAsync(InvId);
+                Inventory = new InventoryViewModel()
+                {
+                    InventoryId = inv.InventoryId,
+                    InventoryName = inv.InventoryName,
+                    Price = inv.Price,
+                    Quantity = inv.Quantity
+                };
+            }
         }
 
         private async Task Update()
         {
             if (Inventory != null)
             {
-                await EditInventoryUseCase!.ExecuteAsync(Inventory);
+                var inv = new Inventory() 
+                { 
+                    InventoryId = Inventory.InventoryId,
+                    InventoryName = Inventory.InventoryName,
+                    Quantity = Inventory.Quantity,
+                    Price = Inventory.Price
+                };
+                await EditInventoryUseCase!.ExecuteAsync(inv);
                 NavigationManager?.NavigateTo("/inventories");
             }
         }
