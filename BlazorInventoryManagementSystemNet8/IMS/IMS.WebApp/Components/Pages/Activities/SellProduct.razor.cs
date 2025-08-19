@@ -4,6 +4,7 @@ using IMS.UseCases.Products.Interfaces;
 using IMS.WebApp.Components.Controls.Common;
 using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace IMS.WebApp.Components.Pages.Activities
@@ -13,6 +14,7 @@ namespace IMS.WebApp.Components.Pages.Activities
         #region Fields
         private SellViewModel _sellViewModel = new SellViewModel();
         private Product? _selectedProduct;
+        private AuthenticationState? _authState;
         #endregion
 
         #region Properties
@@ -24,9 +26,16 @@ namespace IMS.WebApp.Components.Pages.Activities
         ISellProductUseCase? SellProductUseCase { get; set; }
         [Inject]
         IJSRuntime? JSRuntime { get; set; }
+        [Inject]
+        AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         #endregion
 
         #region Methods
+        protected override async Task OnInitializedAsync()
+        {
+            _authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+        }
+
         private async Task<List<ItemViewModel>?> SearchProduct(string name)
         {
             var list = await ViewProductsByNameUseCase!.ExecuteAsync(name);
@@ -44,7 +53,11 @@ namespace IMS.WebApp.Components.Pages.Activities
 
         private async Task Sell()
         {
-            await SellProductUseCase!.ExecuteAsync(_sellViewModel.SalesOrderNumber, _selectedProduct, _sellViewModel.QuantityToSell, _sellViewModel.UnitPrice, "Someone");
+            string userName = string.Empty;
+            if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+                userName = _authState?.User?.Identity?.Name ?? string.Empty;
+
+            await SellProductUseCase!.ExecuteAsync(_sellViewModel.SalesOrderNumber, _selectedProduct, _sellViewModel.QuantityToSell, _sellViewModel.UnitPrice, userName);
             _sellViewModel = new SellViewModel();
             _selectedProduct = null;
         }

@@ -1,5 +1,6 @@
 ﻿@page "/purchase"
 @rendermode InteractiveServer 
+@attribute [Authorize(Policy = "Purchasers")]
 
 <h3>Purchase Inventory</h3>
 <br />

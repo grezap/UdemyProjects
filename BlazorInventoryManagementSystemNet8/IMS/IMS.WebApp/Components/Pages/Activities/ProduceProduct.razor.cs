@@ -4,6 +4,7 @@ using IMS.UseCases.Products.Interfaces;
 using IMS.WebApp.Components.Controls.Common;
 using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace IMS.WebApp.Components.Pages.Activities
@@ -13,6 +14,7 @@ namespace IMS.WebApp.Components.Pages.Activities
         #region Fields
         private ProduceViewModel _produceViewModel = new ProduceViewModel();
         private Product? _selectedProduct;
+        private AuthenticationState? _authState;
         #endregion
 
         #region Properties
@@ -24,9 +26,16 @@ namespace IMS.WebApp.Components.Pages.Activities
         IProduceProductUseCase? ProduceProductUseCase { get; set; }
         [Inject]
         IJSRuntime? JSRuntime { get; set; }
+        [Inject]
+        AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         #endregion
 
         #region Methods
+        protected override async Task OnInitializedAsync()
+        {
+            _authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+        }
+
         private async Task<List<ItemViewModel>?> SearchProduct(string name)
         {
             var list = await ViewProductsByNameUseCase!.ExecuteAsync(name);
@@ -43,7 +52,11 @@ namespace IMS.WebApp.Components.Pages.Activities
 
         private async Task Produce()
         {
-            await ProduceProductUseCase!.ExecuteAsync(_produceViewModel.ProductionNumber, _selectedProduct, _produceViewModel.QuanityToProduce, "Someone");
+            string userName = string.Empty;
+            if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+                userName = _authState?.User?.Identity?.Name ?? string.Empty;
+
+            await ProduceProductUseCase!.ExecuteAsync(_produceViewModel.ProductionNumber, _selectedProduct, _produceViewModel.QuanityToProduce, userName);
             _produceViewModel = new ProduceViewModel();
             _selectedProduct = null;
         }

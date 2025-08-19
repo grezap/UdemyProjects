@@ -4,6 +4,7 @@ using IMS.UseCases.Inventories.Interfaces;
 using IMS.WebApp.Components.Controls.Common;
 using IMS.WebApp.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace IMS.WebApp.Components.Pages.Activities
@@ -13,6 +14,7 @@ namespace IMS.WebApp.Components.Pages.Activities
         #region Fields
         private PurchaseViewModel _purchaseViewModel = new PurchaseViewModel();
         private Inventory? _selectedInventory = null;
+        private AuthenticationState? _authState;
         #endregion
 
         #region Properties
@@ -24,9 +26,16 @@ namespace IMS.WebApp.Components.Pages.Activities
         IPurchaseInventoryUseCase? PurchaseInventoryUseCase { get; set; }
         [Inject]
         IJSRuntime? JSRuntime { get; set; }
+        [Inject]
+        AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         #endregion
 
         #region Methods
+        protected override async Task OnInitializedAsync()
+        {
+            _authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+        }
+
         private async Task<List<ItemViewModel>?> SearchInventory(string name)
         {
             var list = await ViewInventoriesByNameUseCase!.ExecuteAsync(name);
@@ -43,7 +52,11 @@ namespace IMS.WebApp.Components.Pages.Activities
 
         private async Task Purchase()
         {
-            await PurchaseInventoryUseCase!.ExecuteAsync(_purchaseViewModel.PONumber, _selectedInventory, _purchaseViewModel.QuanityToPurchase, "Someone");
+            string userName = string.Empty;
+            if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+                userName = _authState?.User?.Identity?.Name ?? string.Empty;
+
+            await PurchaseInventoryUseCase!.ExecuteAsync(_purchaseViewModel.PONumber, _selectedInventory, _purchaseViewModel.QuanityToPurchase, userName);
             _purchaseViewModel = new PurchaseViewModel();
             _selectedInventory = null;
         }

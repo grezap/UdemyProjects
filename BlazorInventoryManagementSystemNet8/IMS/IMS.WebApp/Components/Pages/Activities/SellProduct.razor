@@ -1,5 +1,6 @@
 ﻿@page "/sell"
 @rendermode InteractiveServer
+@attribute [Authorize(Policy = "Sales")]
 
 <h3>SellProduct</h3>
 <br />

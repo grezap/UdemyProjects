@@ -1,5 +1,6 @@
 ﻿@page "/editproduct/{id:int}"
 @rendermode InteractiveServer 
+@attribute [Authorize(Policy = "Inventory")]
 
 <h3>Edit Product</h3>
 <br />
